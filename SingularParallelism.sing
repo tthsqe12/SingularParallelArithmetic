@@ -1,0 +1,128 @@
+system("--ticks-per-sec",1000);
+
+int i, time1, time2;
+int max_threads = 4;
+int pow = 12;
+int dense_pow = 22;
+
+print("sparse multiplication over Z");
+ring r = 0, (x,y,z,t,u), lp;
+poly a = (1+x+y+2*z^2+3*t^3+5*u^5)^pow;
+poly b = (1+u+t+2*z^2+3*y^3+5*x^5)^pow;
+poly p;
+for (i = 1; i <= max_threads; i++)
+{
+    system("--flint-threads", i);
+    p = 0; time1 = rtimer; p = a*b; time2 = rtimer;
+    "th(" + string(i) + "): " + string(time2 - time1);
+}
+kill r;
+
+print("sparse multiplication over Z/pZ");
+ring r = 536870909, (x,y,z,t,u), lp;
+poly a = (1+x+y+2*z^2+3*t^3+5*u^5)^pow;
+poly b = (1+u+t+2*z^2+3*y^3+5*x^5)^pow;
+poly p;
+for (i = 1; i <= max_threads; i++)
+{
+    system("--flint-threads", i);
+    p = 0; time1 = rtimer; p = a*b; time2 = rtimer;
+    "th(" + string(i) + "): " + string(time2 - time1);
+}
+kill r;
+
+print("dense multiplication over Z");
+ring r = 0, (x,y,z,t), dp;
+poly a = (1+x+y+z+t)^dense_pow;
+poly b = (1+x+y+z+t)^dense_pow;
+poly p;
+for (i = 1; i <= max_threads; i++)
+{
+    system("--flint-threads", i);
+    p = 0; time1 = rtimer; p = a*b; time2 = rtimer;
+    "th(" + string(i) + "): " + string(time2 - time1);
+}
+kill r;
+
+print("dense multiplication over Z/pZ");
+ring r = 536870909, (x,y,z,t), dp;
+poly a = (1+x+y+z+t)^dense_pow;
+poly b = (1+x+y+z+t)^dense_pow;
+poly p;
+for (i = 1; i <= max_threads; i++)
+{
+    system("--flint-threads", i);
+    p = 0; time1 = rtimer; p = a*b; time2 = rtimer;
+    "th(" + string(i) + "): " + string(time2 - time1);
+}
+kill r;
+
+print("sparse division over Z");
+ring r = 0, (x,y,z,t,u), lp;
+poly a = (1+x+y+2*z^2+3*t^3+5*u^5)^pow;
+poly b = (1+u+t+2*z^2+3*y^3+5*x^5)^pow;
+poly p = a*b;
+poly q;
+for (i = 1; i <= max_threads; i++)
+{
+    system("--flint-threads", i);
+    q = 0; time1 = rtimer; q = p/b; time2 = rtimer;
+    "th(" + string(i) + "): " + string(time2 - time1);
+    if (q != a)
+    {
+        print("    wrong answer!!");
+    }
+}
+kill r;
+
+print("sparse division over Z/pZ");
+ring r = 536870909, (x,y,z,t,u), lp;
+poly a = (1+x+y+2*z^2+3*t^3+5*u^5)^pow;
+poly b = (1+u+t+2*z^2+3*y^3+5*x^5)^pow;
+poly p = a*b;
+poly q;
+for (i = 1; i <= max_threads; i++)
+{
+    system("--flint-threads", i);
+    q = 0; time1 = rtimer; q = p/b; time2 = rtimer;
+    "th(" + string(i) + "): " + string(time2 - time1);
+    if (q != a)
+    {
+        print("    wrong answer!!");
+    }
+}
+kill r;
+
+print("sparse gcd over Z");
+ring r = 0, (x,y,z,t,u), lp;
+poly a = (1+x+y^5+z^4+t^40+u^50)^8*(1+x^9+y^2+z^11+t^7+u^27)^5;
+poly b = (1+x+y^5+z^4+t^40+u^50)^3*(1+x^9+y^2+z^11+t^7+u^27)^9;
+poly g;
+for (i = 1; i <= max_threads; i++)
+{
+    system("--flint-threads", i);
+    g = 0; time1 = rtimer; g = gcd(a,b); time2 = rtimer;
+    "th(" + string(i) + "): " + string(time2 - time1);
+    if (g != (1+x+y^5+z^4+t^40+u^50)^3*(1+x^9+y^2+z^11+t^7+u^27)^5)
+    {
+        print("    wrong answer!!");
+    }
+}
+kill r;
+
+print("sparse gcd over Z/pZ");
+ring r = 0, (x,y,z,t,u), lp;
+poly a = (1+x+y^5+z^4+t^40+u^50)^8*(1+x^9+y^2+z^11+t^7+u^27)^5;
+poly b = (1+x+y^5+z^4+t^40+u^50)^3*(1+x^9+y^2+z^11+t^7+u^27)^9;
+poly g;
+for (i = 1; i <= max_threads; i++)
+{
+    system("--flint-threads", i);
+    g = 0; time1 = rtimer; g = gcd(a,b); time2 = rtimer;
+    "th(" + string(i) + "): " + string(time2 - time1);
+    if (g != (1+x+y^5+z^4+t^40+u^50)^3*(1+x^9+y^2+z^11+t^7+u^27)^5)
+    {
+        print("    wrong answer!!");
+    }
+}
+kill r;
